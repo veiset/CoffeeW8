@@ -1,0 +1,22 @@
+# Haskell
+dist
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chs.h
+.virthualenv
+
+
+# Java
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+
+# Vim created files
+*~
+*.swp
