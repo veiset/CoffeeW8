@@ -1,0 +1,41 @@
+Name:                CoffeW8DB
+Version:             0.1
+Synopsis:            The database for the coffeW8 project
+Homepage:            https://github.com/veiset/CoffeeW8
+License:             BSD3
+License-file:        LICENSE
+Author:              Eivind Jahren
+Maintainer:          eivind.jahren at gmail.com
+Category:            DBServer
+Build-type:          Simple
+
+-- Extra files to be distributed with the package, such as examples or
+-- a README.
+-- Extra-source-files:  
+
+-- Constraint on the version of Cabal needed to build this package.
+Cabal-version:       >=1.2
+
+
+Executable CoffeW8DB
+   hs-source-dirs:
+     src
+   Main-is:
+     DB.hs
+   Build-depends:
+     base,
+     HTTP,
+     unordered-containers,
+     vector,
+     mongoDB,
+     bytestring,
+     unix,
+     aeson
+
+  
+  -- Modules not exported by this package.
+  -- Other-modules:       
+  
+  -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
+  -- Build-tools:         
+  
