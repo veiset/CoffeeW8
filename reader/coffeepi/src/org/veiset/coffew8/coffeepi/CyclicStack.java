@@ -6,24 +6,51 @@ public class CyclicStack {
 	private int position;
 	private int interval = 3;
 
+	/**
+	 * 
+	 * @param size
+	 *            total elements in ring buffer
+	 * @param interval
+	 *            unixtime step in seconds
+	 */
 	public CyclicStack(int size, int interval) {
 		this.interval = interval;
 		stack = new CoffeeState[size];
+		for (int i = 0; i < size; i++) {
+			stack[i] = new CoffeeState(0, 0);
+		}
 		position = 0;
 	}
 
+	/**
+	 * 
+	 * @return current expected step length in seconds
+	 */
 	public int getInterval() {
 		return interval;
 	}
 
+	/**
+	 * 
+	 * @return number of elements in the ring buffer
+	 */
 	public int size() {
 		return stack.length;
 	}
 
+	/**
+	 * 
+	 * @return current position to newest added element
+	 */
 	public int getPosition() {
 		return position;
 	}
 
+	/**
+	 * 
+	 * @param state
+	 *            new state to take place of the oldest state in the ring buffer
+	 */
 	public void add(CoffeeState state) {
 		increasePosition();
 		stack[position] = state;
@@ -37,10 +64,20 @@ public class CyclicStack {
 		}
 	}
 
-	public CoffeeState current(int i) {
+	/**
+	 * 
+	 * @return most recent state
+	 */
+	public CoffeeState current() {
 		return stack[position];
 	}
 
+	/**
+	 * 
+	 * @param id
+	 *            element in the list, makes little sense to use this alone
+	 * @return state of given id
+	 */
 	public CoffeeState get(int id) {
 		try {
 			return stack[id];
@@ -49,7 +86,29 @@ public class CyclicStack {
 		}
 	}
 
-	public int resolve(long unixtime) {
+	/**
+	 * 
+	 * @param unixtime
+	 * 
+	 * @return all data newer than given unixtime
+	 */
+	public CoffeeState[] getDataSince(long unixtime) {
+		int lastId = idNewerThanUnix(unixtime);
+		if (lastId == position)
+			return null;
+		else if (lastId == -1)
+			return getLast(size());
+		else
+			return getLast(Math.abs(position - lastId));
+	}
+
+	/**
+	 * 
+	 * @param unixtime
+	 *            Last time checked for data
+	 * @return id of last relevant data
+	 */
+	public int idNewerThanUnix(long unixtime) {
 		int id;
 		for (int i = 0; i < size(); i++) {
 			if (position - i >= 0) {
@@ -64,17 +123,22 @@ public class CyclicStack {
 		return -1;
 	}
 
-	public CoffeeState[] getLast(int size) {
-		if (size <= 0) {
+	/**
+	 * 
+	 * @param number
+	 * @return
+	 */
+	public CoffeeState[] getLast(int number) {
+		if (number <= 0) {
 			return null;
 		}
-		if (size > size())
-			size = size();
+		if (number > size())
+			number = size();
 
-		CoffeeState[] range = new CoffeeState[size];
+		CoffeeState[] range = new CoffeeState[number];
 
 		int id;
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < number; i++) {
 			if (position - i >= 0) {
 				id = position - i;
 			} else {
@@ -85,23 +149,8 @@ public class CyclicStack {
 		return range;
 	}
 
-	@Override
-	public String toString() {
-		int id;
-		String text = "";
-		for (int i = 1; i < size() + 1; ++i) {
-			if (position - i >= 0) {
-				id = position - i;
-			} else {
-				id = (size() - i) + position;
-			}
-			if (id == position) {
-				text += "->  " + id + " - " + get(id).getUnixtime() + "\n";
-			} else {
-				text += "    " + id + " - " + get(id).getUnixtime() + "\n";
-			}
-		}
-		return text;
+	public CoffeeState getLast() {
+		return get(position);
 	}
 
 }

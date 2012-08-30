@@ -45,10 +45,6 @@ public class CyclicStackTest {
 		assertEquals(stack.getPosition(), 0);
 	}
 
-	@Test
-	public void getEmptyElementIsNull() {
-		assertNull(stack.get(0));
-	}
 
 	@Test
 	public void addedElementIsAdded() {
@@ -67,7 +63,7 @@ public class CyclicStackTest {
 	}
 
 	@Test
-	public void getLastShouldReturnNElements() {
+	public void getLastNShouldReturnNElements() {
 		assertEquals(stack.getLast(3).length, 3);
 	}
 
@@ -78,7 +74,7 @@ public class CyclicStackTest {
 	}
 
 	@Test
-	public void resolveUnixtimeZeroIsMinusOne() {
+	public void getIdNewerThanUnixBeforeDataShouldReturnMinusOne() {
 		stack.add(new CoffeeState(5, 50));
 		stack.add(new CoffeeState(11, 50));
 		stack.add(new CoffeeState(14, 50));
@@ -87,7 +83,33 @@ public class CyclicStackTest {
 		stack.add(new CoffeeState(23, 50));
 		stack.add(new CoffeeState(42, 50));
 		stack.add(new CoffeeState(55, 50));
-		assertEquals(stack.resolve(0), -1);
+		assertEquals(stack.idNewerThanUnix(0), -1); // -1, everything is newer
+	}
+
+	@Test
+	public void getIdNewerThanUnixWithNoNewDataShouldReturnCurrentPos() {
+		stack.add(new CoffeeState(5, 50));
+		stack.add(new CoffeeState(11, 50));
+		assertEquals(stack.idNewerThanUnix(15), stack.getPosition());
+	}
+
+	@Test
+	public void getDataSinceBeforeTimeShouldReturnAll() {
+		assertEquals(stack.getDataSince(0).length, stack.size());
+	}
+	
+	@Test
+	public void getDataAfterAddedShouldReturnAdded() {
+		CoffeeState cs = new CoffeeState(5, 5);
+		stack.add(cs);
+		CoffeeState[] states = stack.getDataSince(1);
+		assertEquals(states[0], cs);
+		assertEquals(states.length, 1);
+	}
+	
+	@Test
+	public void getDataWithNoNewDataAfterUnixtimeShouldBeNull() {
+		assertNull(stack.getDataSince(100));
 	}
 
 }
