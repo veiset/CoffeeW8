@@ -16,7 +16,7 @@ import org.restlet.resource.ServerResource;
 
 public class CoffeeServer extends ServerResource {
 
-	private CyclicStack stack;
+	private UnixtimeRingBuffer stack;
 
 	public static void main(String[] args) throws Exception {
 		// Create the HTTP server and listen on port 8182

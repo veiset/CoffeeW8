@@ -1,6 +1,6 @@
 package org.veiset.coffew8.coffeepi;
 
-public class CyclicStack {
+public class UnixtimeRingBuffer {
 
 	private CoffeeState[] stack;
 	private int position;
@@ -13,7 +13,7 @@ public class CyclicStack {
 	 * @param interval
 	 *            unixtime step in seconds
 	 */
-	public CyclicStack(int size, int interval) {
+	public UnixtimeRingBuffer(int size, int interval) {
 		this.interval = interval;
 		stack = new CoffeeState[size];
 		for (int i = 0; i < size; i++) {
