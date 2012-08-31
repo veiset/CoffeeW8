@@ -24,6 +24,19 @@ public class UnixtimeRingBuffer {
 
 	/**
 	 * 
+	 * @param bufferSize
+	 */
+	public UnixtimeRingBuffer(int bufferSize) {
+		interval = 1; // default interval if none is given
+		stack = new CoffeeState[bufferSize];
+		for (int i = 0; i < bufferSize; i++) {
+			stack[i] = new CoffeeState(0, 0);
+		}
+		position = 0;
+	}
+
+	/**
+	 * 
 	 * @return current expected step length in seconds
 	 */
 	public int getInterval() {
