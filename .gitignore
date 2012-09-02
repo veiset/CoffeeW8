@@ -20,3 +20,11 @@ cabal-dev
 # Vim created files
 *~
 *.swp
+
+# LaTeX generated files
+*.pdf
+*.dvi
+*.aux
+*.toc
+*.log
+*.out
