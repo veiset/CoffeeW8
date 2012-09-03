@@ -21,7 +21,7 @@ Executable CoffeW8DB
    hs-source-dirs:
      src
    Main-is:
-     DB.hs
+     Main.hs
    Build-depends:
      base,
      HTTP,
@@ -30,7 +30,8 @@ Executable CoffeW8DB
      mongoDB,
      bytestring,
      unix,
-     aeson
+     aeson,
+     bson
 
   
   -- Modules not exported by this package.
