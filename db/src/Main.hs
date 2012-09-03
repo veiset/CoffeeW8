@@ -5,7 +5,7 @@ import Network.Browser
 import Network.HTTP
 import Data.Maybe
 import Data.ByteString.Internal(c2w)
-import System.Process
+import System.Process as P
 import qualified Data.ByteString.Lazy as B
 import Measurement
 import DBHandling
@@ -14,7 +14,7 @@ main = mainLoop 1
 
 
 mainLoop i = do
-  runCommand "sleep 10" >>= waitForProcess -- Workaround for veiset (noob)
+  P.runCommand "sleep 10" >>= waitForProcess -- Workaround for veiset (noob)
   (_, rsp)
      <- browse $ do
            setAllowRedirects True
