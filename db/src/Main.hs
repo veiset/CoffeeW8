@@ -7,8 +7,6 @@ import Data.Maybe
 import Data.ByteString.Internal(c2w)
 import System.Posix.Unistd(sleep)
 import qualified Data.ByteString.Lazy as B
-import System.Posix.Signals (installHandler, Handler(Catch), sigINT, sigTERM)
-import Control.Concurrent.MVar (modifyMVar_, newMVar, withMVar, MVar)
 import Measurement
 import DBHandling
 
@@ -16,6 +14,8 @@ main = mainLoop 1
 
 
 mainLoop i = do
+  putStrLn "Sleep10000"
+  sleep 1000
   (_, rsp)
      <- browse $ do
            setAllowRedirects True
@@ -33,5 +33,4 @@ mainLoop i = do
       print "Putting to DB"
       putMeasuresToDB pipe ms
       print "Done Putting to DB"
-      sleep 10
       mainLoop j
