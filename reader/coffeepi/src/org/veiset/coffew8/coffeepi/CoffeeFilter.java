@@ -12,5 +12,9 @@ public class CoffeeFilter {
 	public static boolean unixtime(String s) {
 		return s.matches("^[0-9]+$");
 	}
+	
+	public static boolean unixtimeWithCallback(String s) {
+		return s.matches("^[0-9]+&callback.*$");
+	}
 
 }

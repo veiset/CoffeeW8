@@ -3,9 +3,13 @@ package org.veiset.coffew8.coffeepi;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.restlet.Server;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
 import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Options;
 import org.restlet.resource.ServerResource;
 
 public class CoffeeServer extends ServerResource {
@@ -23,7 +27,7 @@ public class CoffeeServer extends ServerResource {
 		new Server(Protocol.HTTP, 8183, CoffeeServer.class).start();
 	}
 
-	@Get("XML")
+	@Get("json")
 	public JsonRepresentation request() {
 		String path = CoffeeFilter.path(getReference().getPath());
 		JSONArray json = new JSONArray();
@@ -31,12 +35,31 @@ public class CoffeeServer extends ServerResource {
 			json = get(Long.parseLong(path));
 		} else if (path == "") {
 			json = get(0);
+		} else if (CoffeeFilter.unixtimeWithCallback(path)) {
+			json = get(5);
 		}
 		JsonRepresentation jsr = new JsonRepresentation(json);
 		if (verbose) {
 			jsr.setIndenting(true);
 		}
+		jsr.setMediaType(MediaType.APPLICATION_JSON);
 		return jsr;
+	}
+
+	@Options
+	public void doOptions(Representation entity) {
+		Form responseHeaders = (Form) getResponse().getAttributes().get(
+				"org.restlet.http.headers");
+		if (responseHeaders == null) {
+			responseHeaders = new Form();
+			getResponse().getAttributes().put("org.restlet.http.headers",
+					responseHeaders);
+		}
+		responseHeaders.add("Access-Control-Allow-Origin", "*");
+		responseHeaders.add("Access-Control-Allow-Methods", "GET, OPTIONS");
+		responseHeaders.add("Access-Control-Allow-Headers", "origin, x-requested-with, content-type");
+		responseHeaders.add("Access-Control-Allow-Credentials", "false");
+		responseHeaders.add("Access-Control-Max-Age", "60");
 	}
 
 	public JSONArray get(long unixtime) {
