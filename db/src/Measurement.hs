@@ -10,7 +10,7 @@ import Control.Monad
 data Measurement = M {
   time :: Integer,
   weight ::Integer
-  }
+  } deriving (Show,Eq,Ord)
 
 mToJson :: Measurement -> Document 
 mToJson m  = ["time" =: time m, "weight" =: weight m]

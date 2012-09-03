@@ -14,7 +14,6 @@ main = mainLoop 1
 
 
 mainLoop i = do
-  P.runCommand "sleep 10" >>= waitForProcess -- Workaround for veiset (noob)
   (_, rsp)
      <- browse $ do
            setAllowRedirects True
@@ -22,7 +21,6 @@ mainLoop i = do
   pipe <- runIOE $ connect (M.host "127.0.0.1")
   print "Parsing Measures"
   let mms = parseMeasures . B.pack . map c2w . rspBody $ rsp
-  M.close pipe
   if (isNothing mms)
     then do
       putStrLn "Could not parse json from http://veiset.org:8183/"
@@ -30,6 +28,11 @@ mainLoop i = do
       let ms = fromJust mms
       let j = maximum . map time $ ms
       print "Putting to DB"
-      putMeasuresToDB pipe ms
-      print "Done Putting to DB"
-      mainLoop j
+      e <- putMeasuresToDB pipe ms
+      case e  of
+        (Left error) -> print error
+        (Right _) -> do
+           print "Done Putting to DB"
+           M.close pipe
+           P.runCommand "sleep 10" >>= waitForProcess -- Workaround for veiset (noob)
+           mainLoop j
