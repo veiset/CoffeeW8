@@ -31,7 +31,8 @@ Executable CoffeW8DB
      bytestring,
      unix,
      aeson,
-     bson
+     bson,
+     process
 
   
   -- Modules not exported by this package.
