@@ -11,4 +11,4 @@ putMeasuresToDB pipe xs = access pipe master "coffeeW8" (inp xs)
 
 --The action that inputs the list of measurements into the the database
 inp :: [Measurement] -> Action IO ()
-inp = mapM_ (\ a -> repsert (select ["time" =: time a] "measurements") . mToJson $ a)
+inp = mapM_ (\ a -> save "measurements" . mToJson $ a)

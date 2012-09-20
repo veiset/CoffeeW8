@@ -13,7 +13,7 @@ data Measurement = M {
   } deriving (Show,Eq,Ord)
 
 mToJson :: Measurement -> Document 
-mToJson m  = ["time" =: time m, "weight" =: weight m]
+mToJson m  = ["_id" =: time m, "weight" =: weight m]
 
 parseMeasures :: B.ByteString -> Maybe [Measurement]
 parseMeasures str =
