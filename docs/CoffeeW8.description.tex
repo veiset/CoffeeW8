@@ -1,0 +1,58 @@
+%        File: CoffeeW8.description.tex
+%     Created: sø. sep. 02 09:00  2012 C
+% Last Change: sø. sep. 02 09:00  2012 C
+%
+\documentclass[a4paper]{article}
+\begin{document}
+\title{CoffeeW8 - Description}
+\author{Alexander Hoem Rosbach}
+\date{September 2012}
+\maketitle
+
+\section{Introduction}
+Is there coffee on the pot, is it hot or not, and for how long, are important questions for students at the Institue of Informatics at UiB. 
+CoffeeW8 is a current coffee status and forecasting application developed by the CoffeeW8-team at II, UiB. \\
+
+The CoffeeW8 team currently consists of:
+\begin{itemize}
+\item Alexander Hoem Rosbach <mapster@ndt-lan.no>
+\item Eivind Jahren <eivind.jahren@gmail.com>
+\item Vegard Veiset <veiset@gmail.com>
+\end{itemize}
+
+\section{CoffeeW8}
+The application will consist of three modules: 
+\begin{itemize}
+\item Reader (written in Java)
+\item DB (written in Haskell)
+\item Web front-end (written in Ruby)
+\end{itemize}
+
+The application will use different kinds of sensors to build data on which it will make its predictions of the coffee status. We will use a weight-sensor,
+multiple if it is proven necessary, to evaluate if there is fluid in the coffee machine. Dependent on where we place it, we will be able to make assumptions on
+where in the process the fluid is located, i.e. if it's in the water chamber, in the filter funnel or the coffee pot. Though this will not be sufficient to evaluate
+if there actually is coffee in the pot, or if it the weight change is related to cleaning of the machine. To overcome this we will add a light sensor to the coffee 
+pot which will be able to detect the color of the fluid in it, though there are also problems related to this, e.g. if there is no light in the room. We will also
+add a heat sensor to the coffee pot heating plate, to detect if the coffee actually is hot, hence drinkable. \\
+
+\section{Reader module}
+The Reader module will be responsible to read data from the sensors and serve it through a REST API to the other modules, or any other client. It will read data from
+the sensors at a set interval and place it in memory in a cyclic buffer\footnote{http://en.wikipedia.org/wiki/Circular\_buffer}. This is a simple task and will need 
+to be kept as simple and resource sparing as possible because it will run on a low-end device, a Raspberry Pi\footnote{http://www.raspberrypi.org/}. The cyclic buffer 
+datastructure is well suited to keep the stored dataset at a size which the Raspberry Pi device can manage. \\
+
+\section{DB and Web front-end modules}
+The DB will access the REST API of the Reader module and store it in a database (mongoDB\footnote{http://www.mongodb.org}) which will be utilized by the Web front-end. The Web front-end will serve
+the data in a human readable form. We will use different kinds of graphs and graphics to visualize the dataset to the end-user. We will probable use either the Sinatra framework\footnote{http://www.sintrarb.com}
+or the Ruby on Rails framework\footnote{http://www.rubyonrails.org}, depending on the complexity we need, to build the web site.\\
+
+We currently plan to make the data available as:
+\begin{itemize}
+\item Current status (Amount, temperature, age, estimated availability, good time to socialize etc.)
+\item History (Total consumption, frequency of consumption etc.), visualized through graphs and weather maps.
+\item Forecast (Consumption frequency, availability, predict when fresh coffee will be available etc.) 
+\end{itemize}
+
+\end{document}
+
+
