@@ -8,27 +8,17 @@
     <script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
  </head>
     <body>
-    <h1>Flot graphs. Pretty stuff</h1>
-
-    <div id="placeholder" style="width:600px;height:300px;"></div>
+    <h1>Coffee State</h1>
+    <p>Consumption the last 60 seconds.</p>
+    <div id="placeholder" style="width:900px;height:250px;"></div>
 
     <script type="text/javascript">
     $(function () {
-        var data = [], totalPoints = 300;
-
-        var updateInterval = 1000;
-        $("#updateInterval").val(updateInterval).change(function () {
-            var v = $(this).val();
-            if (v && !isNaN(+v)) {
-                updateInterval = +v;
-                if (updateInterval < 1)
-                    updateInterval = 1;
-                if (updateInterval > 2000)
-                    updateInterval = 2000;
-                $(this).val("" + updateInterval);
-            }
-        });
-
+        var data = [];
+        // configuration
+        var refresh_rate = 2000; // refresh rate in milliseconds.
+        var data_size = 60;
+        var sensor_time_step = 1; // seconds
         // setup plot
         var options = {
             series: { shadowSize: 0 }, // drawing is faster without shadows
@@ -36,30 +26,36 @@
             xaxis: { show: false }
         };
 
-        function getAjaxData() {
-            var unixtime =  Math.round(new Date().getTime() / 1000); 
+        function getAjaxData(n) {
+            var high = 0;
+            if (data.length > 0) high = data[0][0];
 
-            function callback(data) {
-                json = eval(data);
-                var ds = [];
+            function callback(d) {
+                json = eval(d); // parse JSON array
                 $.each(json, function(i, item) {
-                        ds.push([item.time, item.weight]);
-                        });
-                $.plot($("#placeholder"), [ ds ], options);
+                    if (item.time > high) { // add only if more recent than stored
+                        data.push([item.time, item.weight]);
+                    }
+                });
+                data.sort();
+                data.reverse();
+                if (data.length > data_size) data = data.slice(0,data_size);
+                $.plot($("#placeholder"), [ data ], options);
             };
 
             $.ajax({
               type: "GET",
-              url: 'api' + '/' + 30, // call to get the last 30 elements
+              url: 'api' + '/since/' + high,
               dataType: "json",
               contentType: "text/plain; charset=utf-8",
               success: callback,
             });
 
-            setTimeout(getAjaxData, 2000);
+            setTimeout(getAjaxData, refresh_rate, unixtime);
         }
 
-        getAjaxData();
+        var unixtime =  Math.round(new Date().getTime() / 1000); 
+        getAjaxData(unixtime-(sensor_time_step*data_size));
 
     });
     </script>
