@@ -3,6 +3,8 @@ package org.veiset.coffew8.coffeepi;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.phidgets.PhidgetException;
+
 public class CoffeeManager extends TimerTask {
 
 	private UnixtimeRingBuffer unixRing;
@@ -10,7 +12,12 @@ public class CoffeeManager extends TimerTask {
 
 	public CoffeeManager(int bufferSize, int interval) {
 		setUnixRing(new UnixtimeRingBuffer(bufferSize, interval));
-		setReader(new CoffeeReader());
+		try {
+			setReader(new CoffeeReader());
+		} catch (PhidgetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(this, 0, (int) interval * 1000);
 	}
@@ -18,14 +25,19 @@ public class CoffeeManager extends TimerTask {
 	public CoffeeState[] get(long unixtime) {
 		return getUnixRing().getDataSince(unixtime);
 	}
-	
+
 	public CoffeeState mostRecent() {
 		return unixRing.current();
 	}
 
 	public void read() {
-		CoffeeState cs = getReader().readWeight();
-		getUnixRing().add(cs);
+		try {
+			CoffeeState cs = getReader().readWeight();
+			getUnixRing().add(cs);
+		} catch (PhidgetException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public UnixtimeRingBuffer getUnixRing() {

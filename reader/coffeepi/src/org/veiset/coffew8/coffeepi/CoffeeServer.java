@@ -15,18 +15,28 @@ import org.restlet.resource.ServerResource;
 public class CoffeeServer extends ServerResource {
 
 	// Setting verbose to false will increase performance
-	// as the server wont have to ident the JSON code
+	// as the server wont have to indent the JSON code
 	private final static boolean verbose = true;
+	private final static int interval = 1; // seconds
 	private static CoffeeManager coffee;
 
+	/**
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 		// SIZE = Math.pow(2,15), Interval = 1 second will allow us
 		// to cache data for the last 8 hours.
-		coffee = new CoffeeManager((int) Math.pow(2, 15), 1);
+		coffee = new CoffeeManager((int) Math.pow(2, 15), interval);
 		// Create the HTTP server and listen on port 8182
 		new Server(Protocol.HTTP, 8183, CoffeeServer.class).start();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	@Get("json")
 	public JsonRepresentation request() {
 		String path = CoffeeFilter.path(getReference().getPath());
@@ -46,6 +56,10 @@ public class CoffeeServer extends ServerResource {
 		return jsr;
 	}
 
+	/**
+	 * 
+	 * @param entity
+	 */
 	@Options
 	public void doOptions(Representation entity) {
 		Form responseHeaders = (Form) getResponse().getAttributes().get(
@@ -57,15 +71,26 @@ public class CoffeeServer extends ServerResource {
 		}
 		responseHeaders.add("Access-Control-Allow-Origin", "*");
 		responseHeaders.add("Access-Control-Allow-Methods", "GET, OPTIONS");
-		responseHeaders.add("Access-Control-Allow-Headers", "origin, x-requested-with, content-type");
+		responseHeaders.add("Access-Control-Allow-Headers",
+				"origin, x-requested-with, content-type");
 		responseHeaders.add("Access-Control-Allow-Credentials", "false");
 		responseHeaders.add("Access-Control-Max-Age", "60");
 	}
 
+	/**
+	 * 
+	 * @param unixtime
+	 * @return
+	 */
 	public JSONArray get(long unixtime) {
 		return toJSON(coffee.get(unixtime));
 	}
 
+	/**
+	 * 
+	 * @param states
+	 * @return
+	 */
 	public JSONArray toJSON(CoffeeState[] states) {
 		try {
 			JSONArray list = new JSONArray();

@@ -1,24 +1,31 @@
 package org.veiset.coffew8.coffeepi;
 
-import java.util.Random;
+import com.phidgets.InterfaceKitPhidget;
+import com.phidgets.PhidgetException;
 
 public class CoffeeReader {
-	
-	private int interval = 400;
-	private int step = 0;
-//	>>> step = 3000
-//	>>> for x in range(1,step): print((1/step*x)*2*pi)
 
-	public CoffeeState readWeight() {
-		// dummy method
-		step += 1;
+	static InterfaceKitPhidget ik;
+
+	/**
+	 * 
+	 * @throws PhidgetException
+	 */
+	public CoffeeReader() throws PhidgetException {
+		ik = new InterfaceKitPhidget();
+		ik.openAny();
+		ik.waitForAttachment();
+		System.out.println("Found Phidget-interface kit with serial: " + ik.getSerialNumber());
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws PhidgetException
+	 */
+	public CoffeeState readWeight() throws PhidgetException {
 		long unixtime = System.currentTimeMillis() / 1000L;
-		double cos = Math.cos(((1.0/interval*step)*2*Math.PI));
-
-		int weight = (int)(cos*3000);
-		Random r = new Random();
-		if (step == interval) step = 0;
-		return new CoffeeState(unixtime, Math.abs(weight+r.nextInt(100)));
+		return new CoffeeState(unixtime, ik.getSensorRawValue(0));
 	}
 
 }
