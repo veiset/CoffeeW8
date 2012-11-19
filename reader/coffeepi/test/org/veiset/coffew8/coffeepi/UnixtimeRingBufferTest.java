@@ -72,25 +72,25 @@ public class UnixtimeRingBufferTest {
 		assertEquals(utrb.getLast(1)[0], utrb.get(utrb.getPosition()));
 	}
 
-	@Test
-	public void getIdNewerThanUnixBeforeDataShouldReturnMinusOne() {
-		utrb.add(new CoffeeState(5, 50));
-		utrb.add(new CoffeeState(11, 50));
-		utrb.add(new CoffeeState(14, 50));
-		utrb.add(new CoffeeState(17, 50));
-		utrb.add(new CoffeeState(19, 50));
-		utrb.add(new CoffeeState(23, 50));
-		utrb.add(new CoffeeState(42, 50));
-		utrb.add(new CoffeeState(55, 50));
-		assertEquals(utrb.idNewerThanUnix(0), -1); // -1, everything is newer
-	}
-
-	@Test
-	public void getIdNewerThanUnixWithNoNewDataShouldReturnCurrentPos() {
-		utrb.add(new CoffeeState(5, 50));
-		utrb.add(new CoffeeState(11, 50));
-		assertEquals(utrb.idNewerThanUnix(15), utrb.getPosition());
-	}
+//	@Test
+//	public void getIdNewerThanUnixBeforeDataShouldReturnMinusOne() {
+//		utrb.add(new CoffeeState(5, 50));
+//		utrb.add(new CoffeeState(11, 50));
+//		utrb.add(new CoffeeState(14, 50));
+//		utrb.add(new CoffeeState(17, 50));
+//		utrb.add(new CoffeeState(19, 50));
+//		utrb.add(new CoffeeState(23, 50));
+//		utrb.add(new CoffeeState(42, 50));
+//		utrb.add(new CoffeeState(55, 50));
+//		assertEquals(utrb.idNewerThanUnix(0), -1); // -1, everything is newer
+//	}
+//
+//	@Test
+//	public void getIdNewerThanUnixWithNoNewDataShouldReturnCurrentPos() {
+//		utrb.add(new CoffeeState(5, 50));
+//		utrb.add(new CoffeeState(11, 50));
+//		assertEquals(utrb.idNewerThanUnix(15), utrb.getPosition());
+//	}
 
 	@Test
 	public void getDataSinceBeforeTimeShouldReturnAll() {

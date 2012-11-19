@@ -2,30 +2,30 @@ package org.veiset.coffew8.coffeepi;
 
 public class UnixtimeRingBuffer {
 
-	private final CoffeeState[] stack;
+	private final CoffeeState[] buffer;
 	private int position;
 	private int interval = 3;
 
 	/**
 	 * 
-	 * @param size
+	 * @param bufferSize
 	 *            total elements in ring buffer
 	 * @param interval
 	 *            unixtime step in seconds
 	 */
-	public UnixtimeRingBuffer(int size, int interval) {
+	public UnixtimeRingBuffer(int bufferSize, int interval) {
 		assert interval > 0 : "precondition: interval="+interval;
-		assert size > 0 : "precondition: size="+size;
+		assert bufferSize > 0 : "precondition: size="+bufferSize;
 		
 		this.interval = interval;
-		stack = new CoffeeState[size];
-		for (int i = 0; i < size; i++) {
-			stack[i] = new CoffeeState(0, 0);
+		buffer = new CoffeeState[bufferSize];
+		for (int i = 0; i < bufferSize; i++) {
+			buffer[i] = new CoffeeState(0, 0);
 		}
 		position = 0;
 		
 		assert dataInvariant() : "postcondition: invariant";
-		assert stack.length == size : "postcondition: stack.length=" +stack.length + ", size="+size;
+		assert buffer.length == bufferSize : "postcondition: stack.length=" +buffer.length + ", size="+bufferSize;
 		assert this.interval == interval : "postcondition: this.interval="+this.interval + ",interval="+interval;
 	}
 
@@ -37,24 +37,18 @@ public class UnixtimeRingBuffer {
 		assert bufferSize > 0 : "precondition: size="+bufferSize;
 		
 		interval = 1; // default interval if none is given
-		stack = new CoffeeState[bufferSize];
+		buffer = new CoffeeState[bufferSize];
 		for (int i = 0; i < bufferSize; i++) {
-			stack[i] = new CoffeeState(0, 0);
+			buffer[i] = new CoffeeState(0, 0);
 		}
 		position = 0;
 
 		assert dataInvariant() : "postcondition: invariant";
 		assert interval > 0 : "postcondition: interval="+interval;
-		assert stack.length == bufferSize : "postcondition: stack.length=" +stack.length + ", size="+bufferSize;
+		assert buffer.length == bufferSize : "postcondition: stack.length=" +buffer.length + ", size="+bufferSize;
 	}
 
 	public boolean dataInvariant(){
-		//check for null-entries
-		for(CoffeeState s: stack){
-			if(s == null)
-				return false;
-		}
-		
 		return position >= 0 && position < size();
 	}
 	
@@ -73,7 +67,7 @@ public class UnixtimeRingBuffer {
 	 */
 	public int size() {
 		assert dataInvariant() : "pre-/postcondition: invariant";
-		return stack.length;
+		return buffer.length;
 	}
 
 	/**
@@ -95,7 +89,7 @@ public class UnixtimeRingBuffer {
 		assert state != null : "precondition: state="+state;
 		
 		increasePosition();
-		stack[position] = state;
+		buffer[position] = state;
 		
 		assert dataInvariant() : "postcondition: invariant";
 	}
@@ -115,7 +109,7 @@ public class UnixtimeRingBuffer {
 	 */
 	public CoffeeState current() {
 		assert dataInvariant() : "pre-/postcondition: invariant";
-		return stack[position];
+		return buffer[position];
 	}
 
 	/**
@@ -129,7 +123,7 @@ public class UnixtimeRingBuffer {
 		assert id >= 0 && id < size() : "precondition: id="+id;
 		
 		try {
-			return stack[id];
+			return buffer[id];
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return null;
 		}
@@ -144,14 +138,11 @@ public class UnixtimeRingBuffer {
 	public CoffeeState[] getDataSince(long unixtime) {
 		assert dataInvariant() : "precondition: invariant";
 		
-		int lastId = idNewerThanUnix(unixtime);
+		int number = getNumberOfElementsNewerThan(unixtime);
 		
-		if (lastId == position)
-			return null;
-		else if (lastId == -1)
-			return getLast(size());
-		else
-			return getLast(Math.abs(position - lastId));
+		assert number >= 0 && number < size() : "number="+number;
+		assert dataInvariant() : "postcondition: invariant";
+		return getLast(number);
 	}
 
 	/**
@@ -160,23 +151,31 @@ public class UnixtimeRingBuffer {
 	 *            Last time checked for data
 	 * @return id of last relevant data (or -1 if all?)
 	 */
-	public int idNewerThanUnix(long unixtime) {
+	//getIdOfOldestNewerThanUnixTime
+	public int getNumberOfElementsNewerThan(long unixtime) {
 		assert dataInvariant() : "precondition: invariant";
 		
 		int id;
+		int count = 0;
 		for (int i = 0; i < size(); i++) {
 			if (position - i >= 0) {
 				id = position - i;
 			} else {
 				id = (size() - i) + position;
 			}
+			
+			assert id >= 0 && id < size() : "id="+id;
+			
 			if (get(id).getUnixtime() < unixtime) {
-				assert id >= 0 && id < size() : "postcondition: id="+id;
+				
+				assert count >= 0 && count < size() : "postcondition: count="+count;
 				assert dataInvariant() : "postcondition: invariant";
-				return id;
+				return count;
 			}
+			count++;
 		}
-		return -1;
+		assert dataInvariant() : "postcondition: invariant"; 
+		return  size()-1;
 	}
 
 	/**
