@@ -2,7 +2,7 @@ package org.veiset.coffew8.coffeepi;
 
 public class UnixtimeRingBuffer {
 
-	private CoffeeState[] stack;
+	private final CoffeeState[] stack;
 	private int position;
 	private int interval = 3;
 
@@ -35,6 +35,10 @@ public class UnixtimeRingBuffer {
 		position = 0;
 	}
 
+	public boolean dataInvariant(){
+		return position >= 0 && position < size();
+	}
+	
 	/**
 	 * 
 	 * @return current expected step length in seconds
@@ -119,7 +123,7 @@ public class UnixtimeRingBuffer {
 	 * 
 	 * @param unixtime
 	 *            Last time checked for data
-	 * @return id of last relevant data
+	 * @return id of last relevant data or -1 if not found 
 	 */
 	public int idNewerThanUnix(long unixtime) {
 		int id;
@@ -148,6 +152,8 @@ public class UnixtimeRingBuffer {
 		if (number > size())
 			number = size();
 
+		assert number > 0 && number <= size() : "number="+number;
+		
 		CoffeeState[] range = new CoffeeState[number];
 
 		int id;
@@ -157,6 +163,10 @@ public class UnixtimeRingBuffer {
 			} else {
 				id = (size() - i) + position;
 			}
+			
+			assert id >= 0 && id < size() : "id="+id;
+			assert i >= 0 && i < range.length : "i="+i;
+			
 			range[i] = get(id);
 		}
 		return range;
