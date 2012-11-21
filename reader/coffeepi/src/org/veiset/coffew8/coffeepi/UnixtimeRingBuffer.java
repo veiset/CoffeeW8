@@ -109,7 +109,7 @@ public class UnixtimeRingBuffer {
 	 */
 	public CoffeeState current() {
 		assert dataInvariant() : "pre-/postcondition: invariant";
-		return buffer[position];
+		return get(position);
 	}
 
 	/**
@@ -210,11 +210,6 @@ public class UnixtimeRingBuffer {
 			range[i] = get(id);
 		}
 		return range;
-	}
-
-	public CoffeeState getLast() {
-		assert dataInvariant() : "pre-/postcondition: invariant";
-		return get(position);
 	}
 
 }
