@@ -5,17 +5,17 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RingBufferTest {
+public class UnixtimeRingBufferTest {
 
 	final Integer DATA = 50;
 	// Should be >= 2, as you cannot test correct pointer movement with only one
 	// element.
 	final int SIZE = 5;
-	private RingBuffer utrb;
+	private UnixtimeRingBuffer utrb;
 
 	@Before
 	public void setup() {
-		utrb = new RingBuffer(SIZE);
+		utrb = new UnixtimeRingBuffer(SIZE);
 	}
 
 	@Test

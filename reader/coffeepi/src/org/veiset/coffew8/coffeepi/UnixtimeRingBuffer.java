@@ -1,7 +1,7 @@
 package org.veiset.coffew8.coffeepi;
 
 
-public class RingBuffer {
+public class UnixtimeRingBuffer {
 	public final CoffeeState INITIAL_STATE = new CoffeeState(-1); 
 	
 	private final CoffeeState[] buffer;
@@ -11,7 +11,7 @@ public class RingBuffer {
 	 * 
 	 * @param bufferSize total elements in ring buffer
 	 */
-	public RingBuffer(int bufferSize) {
+	public UnixtimeRingBuffer(int bufferSize) {
 		assert bufferSize > 0 : "precondition: size="+bufferSize;
 		
 		buffer = new CoffeeState[bufferSize];

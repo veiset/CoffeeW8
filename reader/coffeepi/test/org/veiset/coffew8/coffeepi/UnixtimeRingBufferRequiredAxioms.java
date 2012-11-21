@@ -5,18 +5,18 @@ import java.util.Random;
 
 
 /** 
- * These axioms are required for class {@link org.veiset.coffew8.coffeepi.RingBuffer} and its subclasses.
+ * These axioms are required for class {@link org.veiset.coffew8.coffeepi.UnixtimeRingBuffer} and its subclasses.
  * 
  * @note All axioms must be public static void methods
  */
-public class RingBufferRequiredAxioms implements jaxt.framework.RequiredAxioms<org.veiset.coffew8.coffeepi.RingBuffer> {
+public class UnixtimeRingBufferRequiredAxioms implements jaxt.framework.RequiredAxioms<org.veiset.coffew8.coffeepi.UnixtimeRingBuffer> {
 	
-	public static void addedElementIsCurrent(RingBuffer b, Integer s){
+	public static void addedElementIsCurrent(UnixtimeRingBuffer b, Integer s){
 		b.add(s);
 		assertSame(s, b.current().getWeight());
 	}
 	
-	public static void addedElementsIsReversedInGetLast(RingBuffer buffer, Integer[] weights){
+	public static void addedElementsIsReversedInGetLast(UnixtimeRingBuffer buffer, Integer[] weights){
 		for(Integer w: weights)
 			buffer.add(w);
 		
@@ -30,7 +30,7 @@ public class RingBufferRequiredAxioms implements jaxt.framework.RequiredAxioms<o
 		assertTrue(weights.length > 0);
 
 		Random rand = new Random();
-		RingBuffer buffer = new RingBuffer(weights.length);
+		UnixtimeRingBuffer buffer = new UnixtimeRingBuffer(weights.length);
 		for(Integer w: weights){
 			if(rand.nextBoolean()){
 				try {
