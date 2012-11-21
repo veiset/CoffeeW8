@@ -1,6 +1,6 @@
 package org.veiset.coffew8.coffeepi;
 
-public class CoffeeState {
+public class CoffeeState implements Comparable<CoffeeState>{
 
 	private long unixtime;
 	private int weight;
@@ -33,5 +33,15 @@ public class CoffeeState {
 
 	public String toString(){
 		return unixtime + " : " + weight;
+	}
+
+	public int compareTo(CoffeeState coffeeState) {
+		if(unixtime < coffeeState.getUnixtime())
+			return -1;
+
+		if(unixtime == coffeeState.unixtime)
+			return 0;
+			
+		return 1;
 	}
 }

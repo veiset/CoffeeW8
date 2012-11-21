@@ -4,20 +4,19 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.veiset.coffew8.coffeepi.UnixtimeRingBuffer;
+import org.veiset.coffew8.coffeepi.RingBuffer;
 
-public class UnixtimeRingBufferTest {
+public class RingBufferTest {
 
 	final CoffeeState DATA = new CoffeeState(100000, 50);
 	// Should be >= 2, as you cannot test correct pointer movement with only one
 	// element.
 	final int SIZE = 5;
-	final int INTERVAL = 3;
-	private UnixtimeRingBuffer utrb;
+	private RingBuffer utrb;
 
 	@Before
 	public void setup() {
-		utrb = new UnixtimeRingBuffer(SIZE, INTERVAL);
+		utrb = new RingBuffer(SIZE);
 	}
 
 	@Test
@@ -94,21 +93,21 @@ public class UnixtimeRingBufferTest {
 
 	@Test
 	public void getDataSinceBeforeTimeShouldReturnAll() {
-		assertEquals(utrb.getDataSince(0).length, utrb.size());
+		assertEquals(utrb.getElementsAfter(0).length, utrb.size());
 	}
 
 	@Test
 	public void getDataAfterAddedShouldReturnAdded() {
 		CoffeeState cs = new CoffeeState(5, 5);
 		utrb.add(cs);
-		CoffeeState[] states = utrb.getDataSince(1);
+		CoffeeState[] states = utrb.getElementsAfter(1);
 		assertEquals(states[0], cs);
 		assertEquals(states.length, 1);
 	}
 
 	@Test
 	public void getDataWithNoNewDataAfterUnixtimeShouldBeNull() {
-		assertNull(utrb.getDataSince(100));
+		assertNull(utrb.getElementsAfter(100));
 	}
 
 }

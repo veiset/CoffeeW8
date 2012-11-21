@@ -7,11 +7,11 @@ import com.phidgets.PhidgetException;
 
 public class CoffeeManager extends TimerTask {
 
-	private UnixtimeRingBuffer unixRing;
+	private RingBuffer unixRing;
 	private CoffeeReader reader;
 
 	public CoffeeManager(int bufferSize, int interval) {
-		setUnixRing(new UnixtimeRingBuffer(bufferSize, interval));
+		setUnixRing(new RingBuffer(bufferSize));
 		try {
 			setReader(new CoffeeReader());
 		} catch (PhidgetException e) {
@@ -23,7 +23,7 @@ public class CoffeeManager extends TimerTask {
 	}
 
 	public CoffeeState[] get(long unixtime) {
-		return getUnixRing().getDataSince(unixtime);
+		return getUnixRing().getElementsAfter(new CoffeeState(unixtime, 0));
 	}
 
 	public CoffeeState mostRecent() {
@@ -40,11 +40,11 @@ public class CoffeeManager extends TimerTask {
 
 	}
 
-	public UnixtimeRingBuffer getUnixRing() {
+	public RingBuffer getUnixRing() {
 		return unixRing;
 	}
 
-	public void setUnixRing(UnixtimeRingBuffer unixRing) {
+	public void setUnixRing(RingBuffer unixRing) {
 		this.unixRing = unixRing;
 	}
 

@@ -1,42 +1,17 @@
 package org.veiset.coffew8.coffeepi;
 
-public class UnixtimeRingBuffer {
+public class RingBuffer {
 
 	private final CoffeeState[] buffer;
 	private int position;
-	private int interval = 3;
 
 	/**
 	 * 
-	 * @param bufferSize
-	 *            total elements in ring buffer
-	 * @param interval
-	 *            unixtime step in seconds
+	 * @param bufferSize total elements in ring buffer
 	 */
-	public UnixtimeRingBuffer(int bufferSize, int interval) {
-		assert interval > 0 : "precondition: interval="+interval;
+	public RingBuffer(int bufferSize) {
 		assert bufferSize > 0 : "precondition: size="+bufferSize;
 		
-		this.interval = interval;
-		buffer = new CoffeeState[bufferSize];
-		for (int i = 0; i < bufferSize; i++) {
-			buffer[i] = new CoffeeState(0, 0);
-		}
-		position = 0;
-		
-		assert dataInvariant() : "postcondition: invariant";
-		assert buffer.length == bufferSize : "postcondition: stack.length=" +buffer.length + ", size="+bufferSize;
-		assert this.interval == interval : "postcondition: this.interval="+this.interval + ",interval="+interval;
-	}
-
-	/**
-	 * 
-	 * @param bufferSize
-	 */
-	public UnixtimeRingBuffer(int bufferSize) {
-		assert bufferSize > 0 : "precondition: size="+bufferSize;
-		
-		interval = 1; // default interval if none is given
 		buffer = new CoffeeState[bufferSize];
 		for (int i = 0; i < bufferSize; i++) {
 			buffer[i] = new CoffeeState(0, 0);
@@ -44,21 +19,11 @@ public class UnixtimeRingBuffer {
 		position = 0;
 
 		assert dataInvariant() : "postcondition: invariant";
-		assert interval > 0 : "postcondition: interval="+interval;
 		assert buffer.length == bufferSize : "postcondition: stack.length=" +buffer.length + ", size="+bufferSize;
 	}
 
 	public boolean dataInvariant(){
 		return position >= 0 && position < size() && buffer.length > 0;
-	}
-	
-	/**
-	 * 
-	 * @return current expected step length in seconds
-	 */
-	public int getInterval() {
-		assert dataInvariant() : "pre-/postcondition: invariant";
-		return interval;
 	}
 
 	/**
@@ -131,14 +96,14 @@ public class UnixtimeRingBuffer {
 
 	/**
 	 * 
-	 * @param unixtime
+	 * @param coffeState
 	 * 
 	 * @return all data newer than given unixtime
 	 */
-	public CoffeeState[] getDataSince(long unixtime) {
+	public CoffeeState[] getElementsAfter(CoffeeState coffeState) {
 		assert dataInvariant() : "precondition: invariant";
 		
-		int number = getNumberOfElementsNewerThan(unixtime);
+		int number = getNumberOfElementsAfter(coffeState);
 		
 		assert number >= 0 && number < size() : "number="+number;
 		assert dataInvariant() : "postcondition: invariant";
@@ -147,11 +112,11 @@ public class UnixtimeRingBuffer {
 
 	/**
 	 * 
-	 * @param unixtime
+	 * @param coffeeState
 	 *            Last time checked for data
 	 * @return id of last relevant data (or -1 if all?)
 	 */
-	private int getNumberOfElementsNewerThan(long unixtime) {
+	private int getNumberOfElementsAfter(CoffeeState coffeeState) {
 		assert dataInvariant() : "precondition: invariant";
 		
 		int id;
@@ -165,7 +130,7 @@ public class UnixtimeRingBuffer {
 			
 			assert id >= 0 && id < size() : "id="+id;
 			
-			if (get(id).getUnixtime() < unixtime) {
+			if (get(id).compareTo(coffeeState) < 1) {
 				
 				assert count >= 0 && count < size() : "postcondition: count="+count;
 				assert dataInvariant() : "postcondition: invariant";
