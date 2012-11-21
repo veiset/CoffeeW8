@@ -49,7 +49,7 @@ public class UnixtimeRingBuffer {
 	}
 
 	public boolean dataInvariant(){
-		return position >= 0 && position < size();
+		return position >= 0 && position < size() && buffer.length > 0;
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class UnixtimeRingBuffer {
 	 *            element in the list, makes little sense to use this alone
 	 * @return state of given id
 	 */
-	public CoffeeState get(int id) {
+	private CoffeeState get(int id) {
 		assert dataInvariant() : "precondition: invariant";
 		assert id >= 0 && id < size() : "precondition: id="+id;
 		
@@ -151,8 +151,7 @@ public class UnixtimeRingBuffer {
 	 *            Last time checked for data
 	 * @return id of last relevant data (or -1 if all?)
 	 */
-	//getIdOfOldestNewerThanUnixTime
-	public int getNumberOfElementsNewerThan(long unixtime) {
+	private int getNumberOfElementsNewerThan(long unixtime) {
 		assert dataInvariant() : "precondition: invariant";
 		
 		int id;

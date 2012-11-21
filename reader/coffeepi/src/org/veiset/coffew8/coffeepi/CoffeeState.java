@@ -31,4 +31,7 @@ public class CoffeeState {
 		this.weight = weight;
 	}
 
+	public String toString(){
+		return unixtime + " : " + weight;
+	}
 }
