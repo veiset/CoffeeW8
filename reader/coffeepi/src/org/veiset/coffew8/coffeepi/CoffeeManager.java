@@ -3,6 +3,8 @@ package org.veiset.coffew8.coffeepi;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+
 import com.phidgets.PhidgetException;
 
 public class CoffeeManager extends TimerTask {

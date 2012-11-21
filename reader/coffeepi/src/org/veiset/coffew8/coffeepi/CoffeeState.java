@@ -2,25 +2,21 @@ package org.veiset.coffew8.coffeepi;
 
 public class CoffeeState implements Comparable<CoffeeState>{
 
-	private long unixtime;
+	private final long unixtimeMilli;
 	private Integer weight;
 
-	public CoffeeState(long unixtime, int weight) {
-		this.setUnixtime(unixtime);
+	public CoffeeState(long unixtime, Integer weight) {
+		this.unixtimeMilli = unixtime;
 		this.setWeight(weight);
 	}
 
-	public CoffeeState(int weight) {
-		setUnixtime(System.currentTimeMillis() / 1000L);
+	public CoffeeState(Integer weight) {
+		this.unixtimeMilli = System.currentTimeMillis();
 		setWeight(weight);
 	}
 
 	public long getUnixtime() {
-		return unixtime;
-	}
-
-	public void setUnixtime(long unixtime) {
-		this.unixtime = unixtime;
+		return unixtimeMilli;
 	}
 
 	public Integer getWeight() {
@@ -32,16 +28,44 @@ public class CoffeeState implements Comparable<CoffeeState>{
 	}
 
 	public String toString(){
-		return unixtime + " : " + weight;
+		return unixtimeMilli + " : " + weight;
+	}
+	
+	public boolean newerThan(CoffeeState coffeeState) {
+		return this.compareTo(coffeeState) == 1 ? true : false;
 	}
 
 	public int compareTo(CoffeeState coffeeState) {
-		if(unixtime < coffeeState.getUnixtime())
+		if(unixtimeMilli < coffeeState.unixtimeMilli)
 			return -1;
 
-		if(unixtime == coffeeState.unixtime)
+		if(unixtimeMilli == coffeeState.unixtimeMilli)
 			return 0;
-			
+
 		return 1;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (unixtimeMilli ^ (unixtimeMilli >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CoffeeState other = (CoffeeState) obj;
+		if (unixtimeMilli != other.unixtimeMilli)
+			return false;
+		return true;
+	}
+	
 }

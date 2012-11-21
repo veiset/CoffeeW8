@@ -1,7 +1,9 @@
 package org.veiset.coffew8.coffeepi;
 
-public class RingBuffer {
 
+public class RingBuffer {
+	public final CoffeeState INITIAL_STATE = new CoffeeState(-1); 
+	
 	private final CoffeeState[] buffer;
 	private int position;
 
@@ -14,7 +16,7 @@ public class RingBuffer {
 		
 		buffer = new CoffeeState[bufferSize];
 		for (int i = 0; i < bufferSize; i++) {
-			buffer[i] = new CoffeeState(0, 0);
+			buffer[i] = INITIAL_STATE;
 		}
 		position = 0;
 
@@ -54,7 +56,7 @@ public class RingBuffer {
 		
 		increasePosition();
 		buffer[position] = new CoffeeState(weight);
-		
+
 		assert dataInvariant() : "postcondition: invariant";
 	}
 
@@ -102,7 +104,7 @@ public class RingBuffer {
 	public CoffeeState[] getElementsAfter(CoffeeState coffeState) {
 		assert dataInvariant() : "precondition: invariant";
 		
-		int number = getNumberOfElementsAfter(coffeState);
+		int number = getNumberOfElementsNewerThan(coffeState);
 		
 		assert number >= 0 && number < size() : "number="+number;
 		assert dataInvariant() : "postcondition: invariant";
@@ -115,7 +117,7 @@ public class RingBuffer {
 	 *            Last time checked for data
 	 * @return id of last relevant data (or -1 if all?)
 	 */
-	private int getNumberOfElementsAfter(CoffeeState coffeeState) {
+	private int getNumberOfElementsNewerThan(CoffeeState coffeeState) {
 		assert dataInvariant() : "precondition: invariant";
 		
 		int id;
@@ -129,8 +131,7 @@ public class RingBuffer {
 			
 			assert id >= 0 && id < size() : "id="+id;
 			
-			if (get(id).compareTo(coffeeState) < 1) {
-				
+			if (get(id).newerThan(coffeeState)) {
 				assert count >= 0 && count < size() : "postcondition: count="+count;
 				assert dataInvariant() : "postcondition: invariant";
 				return count;

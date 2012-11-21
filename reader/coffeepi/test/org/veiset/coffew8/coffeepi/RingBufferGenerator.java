@@ -3,18 +3,35 @@ package org.veiset.coffew8.coffeepi;
 import java.lang.Object;
 import java.lang.Integer;
 import org.veiset.coffew8.coffeepi.RingBuffer;
+
+
 /**
- * This class was automatically generated from all axioms pertaining to the class RingBuffer, by JAxT. It may be modified.    {@link RingBuffer}
+ * This class was automatically generated from all axioms pertaining to the class RingBuffer, by JAxT. It may be modified.       {@link RingBuffer}
  */
 public class RingBufferGenerator {
 	/**
 	 * TODO 
 	 */
-	public static org.veiset.coffew8.coffeepi.RingBuffer[] createRingBufferTestSet(
-			int loopDepth) {
-		org.veiset.coffew8.coffeepi.RingBuffer x[] = new RingBuffer[20];
+	public static int[] createIntTestSet(int loopDepth) {
+		int x[] = { 1, 2, 255, 100, 70, 20, 19 };
+		return x;
+	}
+
+	/**
+	 * TODO 
+	 */
+	public static java.lang.Object[] createObjectTestSet(int loopDepth) {
+		java.lang.Object x[] = { new Object() };
+		return x;
+	}
+
+	/**
+	 * TODO 
+	 */
+	public static Integer[] createIntegerTestSet(int loopDepth) {
+		Integer x[] = new Integer[20];
 		for (int i = 0; i < x.length; i++) {
-			x[i] = new RingBuffer(i + 1);
+			x[i] = i;
 		}
 		return x;
 	}
@@ -34,27 +51,12 @@ public class RingBufferGenerator {
 	/**
 	 * TODO 
 	 */
-	public static Integer[] createIntegerTestSet(int loopDepth) {
-		Integer x[] = new Integer[20];
+	public static org.veiset.coffew8.coffeepi.RingBuffer[] createRingBufferTestSet(
+			int loopDepth) {
+		org.veiset.coffew8.coffeepi.RingBuffer x[] = new RingBuffer[20];
 		for (int i = 0; i < x.length; i++) {
-			x[i] = i;
+			x[i] = new RingBuffer(i + 1);
 		}
-		return x;
-	}
-
-	/**
-	 * TODO 
-	 */
-	public static java.lang.Object[] createObjectTestSet(int loopDepth) {
-		java.lang.Object x[] = { new Object() };
-		return x;
-	}
-
-	/**
-	 * TODO 
-	 */
-	public static int[] createIntTestSet(int loopDepth) {
-		int x[] = { 1, 2, 255, 100, 70, 20, 19 };
 		return x;
 	}
 }

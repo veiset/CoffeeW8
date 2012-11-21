@@ -4,11 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.veiset.coffew8.coffeepi.RingBuffer;
 
 public class RingBufferTest {
 
-	final int DATA = 50;
+	final Integer DATA = 50;
 	// Should be >= 2, as you cannot test correct pointer movement with only one
 	// element.
 	final int SIZE = 5;
@@ -47,7 +46,7 @@ public class RingBufferTest {
 	@Test
 	public void addedElementIsAdded() {
 		utrb.add(DATA);
-		assertEquals(utrb.current(), DATA);
+		assertSame(utrb.current().getWeight(), DATA);
 	}
 
 	@Test
@@ -103,7 +102,7 @@ public class RingBufferTest {
 		utrb.add(DATA);
 		
 		CoffeeState[] states = utrb.getElementsAfter(cs);
-		assertEquals(states.length, 1);
+		assertEquals(states.length, 2);
 	}
 
 }

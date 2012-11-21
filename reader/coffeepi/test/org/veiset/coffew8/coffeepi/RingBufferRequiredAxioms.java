@@ -1,5 +1,9 @@
 package org.veiset.coffew8.coffeepi;
 import static jaxt.framework.Assert.*;
+
+import java.util.Random;
+
+
 /** 
  * These axioms are required for class {@link org.veiset.coffew8.coffeepi.RingBuffer} and its subclasses.
  * 
@@ -25,15 +29,24 @@ public class RingBufferRequiredAxioms implements jaxt.framework.RequiredAxioms<o
 	public static void elementsMustBeTotallyOrdered(Integer[] weights){
 		assertTrue(weights.length > 0);
 
+		Random rand = new Random();
 		RingBuffer buffer = new RingBuffer(weights.length);
-		for(Integer w: weights)
+		for(Integer w: weights){
+			if(rand.nextBoolean()){
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					fail("failed to sleep");
+				}
+			}
 			buffer.add(w);
+		}
 		
 		CoffeeState[] lastStates = buffer.getLast(buffer.size());
 		CoffeeState prev = lastStates[0];
 		
 		for(int i = 1; i < lastStates.length; i++){
-			assertTrue(prev.compareTo(lastStates[i]) >= 0 );
+			assertTrue(prev.getUnixtime()+" >= "+lastStates[i].getUnixtime(), prev.newerThan(lastStates[i])  || prev.equals(lastStates[i]));
 			prev = lastStates[i];
 		}
 	}
