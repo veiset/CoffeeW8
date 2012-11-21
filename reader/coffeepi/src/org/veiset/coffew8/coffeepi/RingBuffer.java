@@ -46,15 +46,14 @@ public class RingBuffer {
 
 	/**
 	 * 
-	 * @param state
+	 * @param weight
 	 *            new state to take place of the oldest state in the ring buffer
 	 */
-	public void add(CoffeeState state) {
+	public void add(Integer weight) {
 		assert dataInvariant() : "precondition: invariant";
-		assert state != null : "precondition: state="+state;
 		
 		increasePosition();
-		buffer[position] = state;
+		buffer[position] = new CoffeeState(weight);
 		
 		assert dataInvariant() : "postcondition: invariant";
 	}

@@ -32,8 +32,7 @@ public class CoffeeManager extends TimerTask {
 
 	public void read() {
 		try {
-			CoffeeState cs = getReader().readWeight();
-			getUnixRing().add(cs);
+			getUnixRing().add(getReader().readWeight());
 		} catch (PhidgetException e) {
 			e.printStackTrace();
 		}

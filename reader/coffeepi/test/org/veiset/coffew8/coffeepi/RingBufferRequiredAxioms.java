@@ -7,27 +7,27 @@ import static jaxt.framework.Assert.*;
  */
 public class RingBufferRequiredAxioms implements jaxt.framework.RequiredAxioms<org.veiset.coffew8.coffeepi.RingBuffer> {
 	
-	public static void addedElementIsCurrent(RingBuffer b, CoffeeState s){
+	public static void addedElementIsCurrent(RingBuffer b, Integer s){
 		b.add(s);
-		assertSame(s, b.current());
+		assertSame(s, b.current().getWeight());
 	}
 	
-	public static void addedElementsIsReversedInGetLast(RingBuffer buffer, CoffeeState[] states){
-		for(CoffeeState s: states)
-			buffer.add(s);
+	public static void addedElementsIsReversedInGetLast(RingBuffer buffer, Integer[] weights){
+		for(Integer w: weights)
+			buffer.add(w);
 		
-		CoffeeState[] last = buffer.getLast(states.length);
+		CoffeeState[] last = buffer.getLast(weights.length);
 		for(int i = 0; i < last.length && i < buffer.size(); i++){
-			assertSame(states[states.length-1-i], last[i]);
+			assertSame(weights[weights.length-1-i], last[i].getWeight());
 		}
 	}
 	
-	public static void elementsMustBeTotallyOrdered(CoffeeState[] weights){
+	public static void elementsMustBeTotallyOrdered(Integer[] weights){
 		assertTrue(weights.length > 0);
 
 		RingBuffer buffer = new RingBuffer(weights.length);
-		for(CoffeeState s: weights)
-			buffer.add(s);
+		for(Integer w: weights)
+			buffer.add(w);
 		
 		CoffeeState[] lastStates = buffer.getLast(buffer.size());
 		CoffeeState prev = lastStates[0];

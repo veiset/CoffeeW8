@@ -23,9 +23,8 @@ public class CoffeeReader {
 	 * @return
 	 * @throws PhidgetException
 	 */
-	public CoffeeState readWeight() throws PhidgetException {
-		long unixtime = System.currentTimeMillis() / 1000L;
-		return new CoffeeState(unixtime, ik.getSensorRawValue(0));
+	public int readWeight() throws PhidgetException {
+		return ik.getSensorRawValue(0);
 	}
 
 }

@@ -3,7 +3,7 @@ package org.veiset.coffew8.coffeepi;
 public class CoffeeState implements Comparable<CoffeeState>{
 
 	private long unixtime;
-	private int weight;
+	private Integer weight;
 
 	public CoffeeState(long unixtime, int weight) {
 		this.setUnixtime(unixtime);
@@ -23,11 +23,11 @@ public class CoffeeState implements Comparable<CoffeeState>{
 		this.unixtime = unixtime;
 	}
 
-	public int getWeight() {
+	public Integer getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(Integer weight) {
 		this.weight = weight;
 	}
 

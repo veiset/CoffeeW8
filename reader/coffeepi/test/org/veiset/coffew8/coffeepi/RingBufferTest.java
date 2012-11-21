@@ -8,7 +8,7 @@ import org.veiset.coffew8.coffeepi.RingBuffer;
 
 public class RingBufferTest {
 
-	final CoffeeState DATA = new CoffeeState(100000, 50);
+	final int DATA = 50;
 	// Should be >= 2, as you cannot test correct pointer movement with only one
 	// element.
 	final int SIZE = 5;
@@ -91,23 +91,19 @@ public class RingBufferTest {
 //		assertEquals(utrb.idNewerThanUnix(15), utrb.getPosition());
 //	}
 
-	@Test
-	public void getDataSinceBeforeTimeShouldReturnAll() {
-		assertEquals(utrb.getElementsAfter(0).length, utrb.size());
-	}
+//	@Test
+//	public void getDataSinceBeforeTimeShouldReturnAll() {
+//		assertEquals(utrb.getElementsAfter(new CoffeeState(0)).length, utrb.size());
+//	}
 
 	@Test
 	public void getDataAfterAddedShouldReturnAdded() {
-		CoffeeState cs = new CoffeeState(5, 5);
-		utrb.add(cs);
-		CoffeeState[] states = utrb.getElementsAfter(1);
-		assertEquals(states[0], cs);
+		utrb.add(5);
+		CoffeeState cs = utrb.current();
+		utrb.add(DATA);
+		
+		CoffeeState[] states = utrb.getElementsAfter(cs);
 		assertEquals(states.length, 1);
-	}
-
-	@Test
-	public void getDataWithNoNewDataAfterUnixtimeShouldBeNull() {
-		assertNull(utrb.getElementsAfter(100));
 	}
 
 }
