@@ -51,7 +51,7 @@ public class UnixtimeRingBuffer {
 	 * @param weight
 	 *            new state to take place of the oldest state in the ring buffer
 	 */
-	public void add(Integer weight) {
+	public synchronized void add(Integer weight) {
 		assert dataInvariant() : "precondition: invariant";
 		
 		increasePosition();
@@ -60,7 +60,7 @@ public class UnixtimeRingBuffer {
 		assert dataInvariant() : "postcondition: invariant";
 	}
 
-	private void increasePosition() {
+	private synchronized void increasePosition() {
 		assert dataInvariant() : "precondition: invariant";
 		position += 1;
 		if (position == size()) {

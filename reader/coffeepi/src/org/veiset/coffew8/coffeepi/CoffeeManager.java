@@ -25,28 +25,20 @@ public class CoffeeManager extends TimerTask {
 	}
 
 	public CoffeeState[] get(long unixtime) {
-		return getUnixRing().getElementsAfter(new CoffeeState(unixtime, 0));
+		return unixRing.getElementsAfter(new CoffeeState(unixtime, 0));
 	}
 
 	public CoffeeState mostRecent() {
-		return getUnixRing().current();
+		return unixRing.current();
 	}
 
 	public void read() {
+		// TODO we should fix this also, maybe add log4j 
 		try {
-			getUnixRing().add(getReader().readWeight());
+			unixRing.add(reader.readWeight());
 		} catch (PhidgetException e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	private synchronized UnixtimeRingBuffer getUnixRing(){
-		return unixRing;
-	}
-
-	private synchronized CoffeeReader getReader(){
-		return reader;
 	}
 
 	@Override
