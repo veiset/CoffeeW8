@@ -9,11 +9,11 @@ import com.phidgets.PhidgetException;
 
 public class CoffeeManager extends TimerTask {
 
-	private UnixtimeRingBuffer unixRing;
+	private final UnixtimeRingBuffer unixRing;
 	private CoffeeReader reader;
 
 	public CoffeeManager(int bufferSize, int interval) {
-		setUnixRing(new UnixtimeRingBuffer(bufferSize));
+		unixRing = new UnixtimeRingBuffer(bufferSize);
 		try {
 			setReader(new CoffeeReader());
 		} catch (PhidgetException e) {
@@ -43,10 +43,6 @@ public class CoffeeManager extends TimerTask {
 
 	public UnixtimeRingBuffer getUnixRing() {
 		return unixRing;
-	}
-
-	public void setUnixRing(UnixtimeRingBuffer unixRing) {
-		this.unixRing = unixRing;
 	}
 
 	public CoffeeReader getReader() {
