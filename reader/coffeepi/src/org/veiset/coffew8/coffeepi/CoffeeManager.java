@@ -15,9 +15,9 @@ public class CoffeeManager extends TimerTask {
 	public CoffeeManager(int bufferSize, int interval) {
 		unixRing = new UnixtimeRingBuffer(bufferSize);
 		try {
-			setReader(new CoffeeReader());
+			this.reader = new CoffeeReader();
 		} catch (PhidgetException e) {
-			// TODO Auto-generated catch block
+			// TODO fix this
 			e.printStackTrace();
 		}
 		Timer timer = new Timer();
@@ -29,7 +29,7 @@ public class CoffeeManager extends TimerTask {
 	}
 
 	public CoffeeState mostRecent() {
-		return unixRing.current();
+		return getUnixRing().current();
 	}
 
 	public void read() {
@@ -41,16 +41,12 @@ public class CoffeeManager extends TimerTask {
 
 	}
 
-	public UnixtimeRingBuffer getUnixRing() {
+	private synchronized UnixtimeRingBuffer getUnixRing(){
 		return unixRing;
 	}
 
-	public CoffeeReader getReader() {
+	private synchronized CoffeeReader getReader(){
 		return reader;
-	}
-
-	public void setReader(CoffeeReader reader) {
-		this.reader = reader;
 	}
 
 	@Override
