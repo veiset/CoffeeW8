@@ -17,7 +17,7 @@ public class CoffeeServer extends ServerResource {
 	// Setting verbose to false will increase performance
 	// as the server wont have to indent the JSON code
 	private final static boolean verbose = true;
-	private final static int interval = 1; // seconds
+	private final static int interval = 1000; // mseconds
 	private static CoffeeManager coffee;
 
 	/**

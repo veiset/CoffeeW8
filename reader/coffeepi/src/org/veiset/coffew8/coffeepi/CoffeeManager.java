@@ -21,7 +21,7 @@ public class CoffeeManager extends TimerTask {
 			e.printStackTrace();
 		}
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(this, 0, (int) interval * 1000);
+		timer.scheduleAtFixedRate(this, 0, interval);
 	}
 
 	public CoffeeState[] get(long unixtime) {
