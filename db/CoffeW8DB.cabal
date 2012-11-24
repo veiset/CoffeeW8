@@ -25,6 +25,7 @@ Executable CoffeW8DB
      Main.hs
    Build-depends:
      base,
+     cmdargs,
      HTTP,
      unordered-containers,
      vector,
