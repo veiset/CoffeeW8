@@ -96,13 +96,14 @@ public class UnixtimeRingBufferTest {
 //	}
 
 	@Test
-	public void getDataAfterAddedShouldReturnAdded() {
+	public void getDataAfterAddedShouldReturnAdded() throws InterruptedException {
 		utrb.add(5);
 		CoffeeState cs = utrb.current();
+		Thread.sleep(1);
 		utrb.add(DATA);
 		
 		CoffeeState[] states = utrb.getElementsAfter(cs);
-		assertEquals(states.length, 2);
+		assertEquals(1, states.length);
 	}
 
 }

@@ -105,7 +105,6 @@ public class UnixtimeRingBuffer {
 		assert dataInvariant() : "precondition: invariant";
 		
 		int number = getNumberOfElementsNewerThan(coffeState);
-		
 		assert number >= 0 && number < size() : "number="+number;
 		assert dataInvariant() : "postcondition: invariant";
 		return getLast(number);
@@ -131,7 +130,7 @@ public class UnixtimeRingBuffer {
 			
 			assert id >= 0 && id < size() : "id="+id;
 			
-			if (get(id).newerThan(coffeeState)) {
+			if (!get(id).newerThan(coffeeState)) {
 				assert count >= 0 && count < size() : "postcondition: count="+count;
 				assert dataInvariant() : "postcondition: invariant";
 				return count;
