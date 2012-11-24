@@ -1,46 +1,31 @@
 package org.veiset.coffew8.coffeepi;
 
+
 public class UnixtimeRingBuffer {
-
-	private CoffeeState[] stack;
+	public final CoffeeState INITIAL_STATE = new CoffeeState(-1); 
+	
+	private final CoffeeState[] buffer;
 	private int position;
-	private int interval = 3;
 
 	/**
 	 * 
-	 * @param size
-	 *            total elements in ring buffer
-	 * @param interval
-	 *            unixtime step in seconds
-	 */
-	public UnixtimeRingBuffer(int size, int interval) {
-		this.interval = interval;
-		stack = new CoffeeState[size];
-		for (int i = 0; i < size; i++) {
-			stack[i] = new CoffeeState(0, 0);
-		}
-		position = 0;
-	}
-
-	/**
-	 * 
-	 * @param bufferSize
+	 * @param bufferSize total elements in ring buffer
 	 */
 	public UnixtimeRingBuffer(int bufferSize) {
-		interval = 1; // default interval if none is given
-		stack = new CoffeeState[bufferSize];
+		assert bufferSize > 0 : "precondition: size="+bufferSize;
+		
+		buffer = new CoffeeState[bufferSize];
 		for (int i = 0; i < bufferSize; i++) {
-			stack[i] = new CoffeeState(0, 0);
+			buffer[i] = INITIAL_STATE;
 		}
 		position = 0;
+
+		assert dataInvariant() : "postcondition: invariant";
+		assert buffer.length == bufferSize : "postcondition: stack.length=" +buffer.length + ", size="+bufferSize;
 	}
 
-	/**
-	 * 
-	 * @return current expected step length in seconds
-	 */
-	public int getInterval() {
-		return interval;
+	public boolean dataInvariant(){
+		return position >= 0 && position < size() && buffer.length > 0;
 	}
 
 	/**
@@ -48,7 +33,8 @@ public class UnixtimeRingBuffer {
 	 * @return number of elements in the ring buffer
 	 */
 	public int size() {
-		return stack.length;
+		assert dataInvariant() : "pre-/postcondition: invariant";
+		return buffer.length;
 	}
 
 	/**
@@ -56,25 +42,31 @@ public class UnixtimeRingBuffer {
 	 * @return current position to newest added element
 	 */
 	public int getPosition() {
+		assert dataInvariant() : "pre-/postcondition: invariant";
 		return position;
 	}
 
 	/**
 	 * 
-	 * @param state
+	 * @param weight
 	 *            new state to take place of the oldest state in the ring buffer
 	 */
-	public void add(CoffeeState state) {
+	public synchronized void add(Integer weight) {
+		assert dataInvariant() : "precondition: invariant";
+		
 		increasePosition();
-		stack[position] = state;
+		buffer[position] = new CoffeeState(weight);
 
+		assert dataInvariant() : "postcondition: invariant";
 	}
 
-	private void increasePosition() {
+	private synchronized void increasePosition() {
+		assert dataInvariant() : "precondition: invariant";
 		position += 1;
 		if (position == size()) {
 			position = 0;
 		}
+		assert dataInvariant() : "postcondition: invariant";
 	}
 
 	/**
@@ -82,7 +74,8 @@ public class UnixtimeRingBuffer {
 	 * @return most recent state
 	 */
 	public CoffeeState current() {
-		return stack[position];
+		assert dataInvariant() : "pre-/postcondition: invariant";
+		return get(position);
 	}
 
 	/**
@@ -91,9 +84,12 @@ public class UnixtimeRingBuffer {
 	 *            element in the list, makes little sense to use this alone
 	 * @return state of given id
 	 */
-	public CoffeeState get(int id) {
+	private CoffeeState get(int id) {
+		assert dataInvariant() : "precondition: invariant";
+		assert id >= 0 && id < size() : "precondition: id="+id;
+		
 		try {
-			return stack[id];
+			return buffer[id];
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return null;
 		}
@@ -101,39 +97,48 @@ public class UnixtimeRingBuffer {
 
 	/**
 	 * 
-	 * @param unixtime
+	 * @param coffeState
 	 * 
 	 * @return all data newer than given unixtime
 	 */
-	public CoffeeState[] getDataSince(long unixtime) {
-		int lastId = idNewerThanUnix(unixtime);
-		if (lastId == position)
-			return null;
-		else if (lastId == -1)
-			return getLast(size());
-		else
-			return getLast(Math.abs(position - lastId));
+	public CoffeeState[] getElementsAfter(CoffeeState coffeState) {
+		assert dataInvariant() : "precondition: invariant";
+		
+		int number = getNumberOfElementsNewerThan(coffeState);
+		assert number >= 0 && number < size() : "number="+number;
+		assert dataInvariant() : "postcondition: invariant";
+		return getLast(number);
 	}
 
 	/**
 	 * 
-	 * @param unixtime
+	 * @param coffeeState
 	 *            Last time checked for data
-	 * @return id of last relevant data
+	 * @return id of last relevant data (or -1 if all?)
 	 */
-	public int idNewerThanUnix(long unixtime) {
+	private int getNumberOfElementsNewerThan(CoffeeState coffeeState) {
+		assert dataInvariant() : "precondition: invariant";
+		
 		int id;
+		int count = 0;
 		for (int i = 0; i < size(); i++) {
 			if (position - i >= 0) {
 				id = position - i;
 			} else {
 				id = (size() - i) + position;
 			}
-			if (get(id).getUnixtime() < unixtime) {
-				return id;
+			
+			assert id >= 0 && id < size() : "id="+id;
+			
+			if (!get(id).newerThan(coffeeState)) {
+				assert count >= 0 && count < size() : "postcondition: count="+count;
+				assert dataInvariant() : "postcondition: invariant";
+				return count;
 			}
+			count++;
 		}
-		return -1;
+		assert dataInvariant() : "postcondition: invariant"; 
+		return  size()-1;
 	}
 
 	/**
@@ -142,12 +147,16 @@ public class UnixtimeRingBuffer {
 	 * @return
 	 */
 	public CoffeeState[] getLast(int number) {
+		assert dataInvariant() : "precondition: invariant";
+		
 		if (number <= 0) {
 			return null;
 		}
 		if (number > size())
 			number = size();
 
+		assert number > 0 && number <= size() : "number="+number;
+		
 		CoffeeState[] range = new CoffeeState[number];
 
 		int id;
@@ -157,13 +166,13 @@ public class UnixtimeRingBuffer {
 			} else {
 				id = (size() - i) + position;
 			}
+			
+			assert id >= 0 && id < size() : "id="+id;
+			assert i >= 0 && i < range.length : "i="+i;
+			
 			range[i] = get(id);
 		}
 		return range;
-	}
-
-	public CoffeeState getLast() {
-		return get(position);
 	}
 
 }
