@@ -4,6 +4,25 @@ $(function () {
     var data_size = 60;
     var refresh_rate = 2000; // refresh rate in milliseconds.
 
+    function updateInfo() {
+        var start_time = 0;
+        var end_time = 0;
+        if (coffee_data.length > 0) {
+            end_time = coffee_data[0][0];
+            start_time = coffee_data[coffee_data.length-1][0];
+        }
+        var secs = (end_time-start_time) / 1000;
+
+        var min = Math.floor(secs / 60);
+        var sec = Math.floor(secs % 60);
+
+        var info_text = "Consumption the last " 
+                         + min + " minutes and " + sec + " seconds. " 
+                         + coffee_data.length + " entries.";
+
+        document.getElementById("info").innerHTML = info_text;
+    };
+
     $("#data_size_input").val(data_size).change(function () {
         var v = $(this).val();
         if (v && !isNaN(+v)) {
@@ -13,6 +32,7 @@ $(function () {
             if (data_size > 5000)
                 data_size = 5000;
             $(this).val("" + data_size);
+            coffee_data = [];
         } 
     });
 
@@ -36,8 +56,6 @@ $(function () {
 
     function getData() {
         var most_recent = 0;
-        var start_time = 0;
-        var end_time = 0;
         if (coffee_data.length > 0) most_recent = coffee_data[0][0];
 
         function callback(json_data) {
@@ -55,6 +73,7 @@ $(function () {
                 lines: { fill: true }
             }];
             $.plot($("#placeholder"), series, options);
+            updateInfo();
         };
 
         var apiCall = '/last/' + data_size; 
