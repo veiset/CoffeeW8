@@ -1,8 +1,14 @@
 $(function () {
     var coffee_data = [];
     // configuration
-    var data_size = 60;
-    var refresh_rate = 2000; // refresh rate in milliseconds.
+    var data_size = 800;
+    var refresh_rate = 1000; // refresh rate in milliseconds.
+    // setup plot
+    var options = {
+        series: { shadowSize: 2 }, // drawing is faster without shadows
+        xaxis: { show: false },
+        yaxis: { min: 50, max: 120 }
+    };
 
     function updateInfo() {
         var start_time = 0;
@@ -11,16 +17,24 @@ $(function () {
             end_time = coffee_data[0][0];
             start_time = coffee_data[coffee_data.length-1][0];
         }
-        var secs = (end_time-start_time) / 1000;
+        var secs = (end_time - start_time) / 1000;
 
         var min = Math.floor(secs / 60);
         var sec = Math.floor(secs % 60);
 
-        var info_text = "Consumption the last " 
-                         + min + " minutes and " + sec + " seconds. " 
-                         + coffee_data.length + " entries.";
+        var info_text = "Consumption the last <b>" 
+                         + min + "</b> minutes and <b>" + sec + "</b> seconds. <b>" 
+                         + coffee_data.length + "</b> entries.";
 
         document.getElementById("info").innerHTML = info_text;
+
+        var most_recent_entry = new Date(end_time);
+        var oldest_entry = new Date(start_time);
+        var info_date_text = "Recent entry at: " + most_recent_entry.toLocaleString()
+                             + "<br/>Oldest entry at: " + oldest_entry.toLocaleString();
+
+
+        document.getElementById("info_date").innerHTML = info_date_text;
     };
 
     $("#data_size_input").val(data_size).change(function () {
@@ -48,11 +62,6 @@ $(function () {
         } 
     });
 
-    // setup plot
-    var options = {
-        series: { shadowSize: 3 }, // drawing is faster without shadows
-        xaxis: { show: false }
-    };
 
     function getData() {
         var most_recent = 0;
