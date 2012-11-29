@@ -11,49 +11,54 @@ is equal to
 api/last/5/measurements/
 ```
 
-api/since/:unixtime:
---------------------
+API Calls
+---------
 
 ```
-api/since/:unixtime:
-```
-
-### Example
-```
-curl http://veiset.org:4567/api/since/1303034030000
-[{"time":1353929840931,"weight":109},{"time":1353929841930,"weight":108},...,{"time":1353929845930,"weight":108},{"time":1353929846930,"weight":105},{"time":1353929847930,"weight":106}]
-```
-
-api/last/:number:/:unit:
-------------------------
-
-```
-api/last/:number:
+API Call:    api/since/:unixtime:
+ Example:    api/since/1303034030000
+ Returns:    [{"time":1353929840931,"weight":109},..,{"time":1353929847930,"weight":106}]
+    Type:    Array of (Unixtime, Int) tuples
 ```
 
 ```
-api/last/:number:/measurements
+API Call:    api/last/:measurements:
+ Example:    api/last/2
+ Returns:    [{"time":1353929983930,"weight":104},{"time":1353929982930,"weight":104}]
+    Type:    Array of (Unixtime, Int) tuples
 ```
 
 ```
-api/last/:number:/seconds
+API Call:    api/last/:measurements:/measurements
+ Example:    api/last/2/measurements
+ Returns:    [{"time":1353929983930,"weight":104},{"time":1353929982930,"weight":104}]
+    Type:    Array of (Unixtime, Int) tuples
 ```
 
 ```
-api/last/:number:/minutes
+API Call:    api/last/:seconds:/seconds
+ Example:    api/last/2/seconds
+ Returns:    [{"time":1353929983930,"weight":104}]
+    Type:    Array of (Unixtime, Int) tuples
 ```
 
 ```
-api/last/:number:/hours
+API Call:    api/last/:seconds:/minutes
+ Example:    api/last/2/minutes
+ Returns:    [{"time":1353929983930,"weight":104}]
+    Type:    Array of (Unixtime, Int) tuples
+```
+```
+API Call:    api/last/:seconds:/hours
+ Example:    api/last/2/hours
+ Returns:    [{"time":1353929983930,"weight":104}]
+    Type:    Array of (Unixtime, Int) tuples
+```
+```
+API Call:    api/last/:seconds:/days
+ Example:    api/last/2/days
+ Returns:    [{"time":1353929983930,"weight":104}]
+    Type:    Array of (Unixtime, Int) tuples
 ```
 
-```
-api/last/:number:/days
-```
 
-
-### Example
-```
-curl http://veiset.org:4567/api/last/3/measurements
-[{"time":1353929983930,"weight":104},{"time":1353929982930,"weight":104},{"time":1353929981930,"weight":104}]
-```
