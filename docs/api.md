@@ -11,8 +11,8 @@ is equal to
 api/last/5/measurements/
 ```
 
-api/since/:unixtime:
---------------------
+### api/since/:unixtime:
+
 Some description of this...
 ```
 API Call:    api/since/:unixtime:
@@ -22,8 +22,8 @@ API Call:    api/since/:unixtime:
 ```
 
 
-api/last/:measurements:
------------------------
+### api/last/:measurements:
+
 Some description of this...
 
 ```
@@ -33,8 +33,7 @@ API Call:    api/last/:measurements:
     Type:    Array of (Unixtime, Int) tuples
 ```
 
-api/last/:measurements:/measurements
-------------------------------------
+### api/last/:measurements:/measurements
 
 ```
 API Call:    api/last/:measurements:/measurements
@@ -43,8 +42,8 @@ API Call:    api/last/:measurements:/measurements
     Type:    Array of (Unixtime, Int) tuples
 ```
 
-api/last/:seconds:/seconds
---------------------------
+### api/last/:seconds:/seconds
+
 ```
 API Call:    api/last/:seconds:/seconds
  Example:    api/last/2/seconds
@@ -52,8 +51,8 @@ API Call:    api/last/:seconds:/seconds
     Type:    Array of (Unixtime, Int) tuples
 ```
 
-api/last/:minutes:/minutes
---------------------------
+### api/last/:minutes:/minutes
+
 ```
 API Call:    api/last/:minutes:/minutes
  Example:    api/last/2/minutes
@@ -61,8 +60,8 @@ API Call:    api/last/:minutes:/minutes
     Type:    Array of (Unixtime, Int) tuples
 ```
 
-api/last/:hours:/hours
-----------------------
+### api/last/:hours:/hours
+
 ```
 API Call:    api/last/:hours:/hours
  Example:    api/last/2/hours
@@ -70,8 +69,8 @@ API Call:    api/last/:hours:/hours
     Type:    Array of (Unixtime, Int) tuples
 ```
 
-api/last/:days:/days
---------------------
+### api/last/:days:/days
+
 ```
 API Call:    api/last/:days:/days
  Example:    api/last/2/days
