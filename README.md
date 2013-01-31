@@ -3,9 +3,9 @@ CoffeeW8
 
 Web-interface for the Coffee machine located at the reading area of the Institue of Informatics, at the University of Bergen.
 
-Worklog
--------
-[Link to worklog](https://github.com/veiset/CoffeeW8/wiki/worklog "Worklog")
+* [Article explaining the CoffeeW8 project](https://github.com/veiset/veiset-blog/blob/master/published/coffeeW8-project.md)
+
+* [Link to worklog](https://github.com/veiset/CoffeeW8/wiki/worklog "Worklog")
 
 Problem description
 -------------------
