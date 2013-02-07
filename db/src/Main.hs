@@ -46,7 +46,7 @@ mainBody t domain intrv callback = do
       putStrLn "Could not parse json from http://veiset.org:8183/"
     else do
       let ms = fromJust mms
-      let j = maximum . map time $ ms
+      let j = safeMax . map time $ ms
       putStrLn ("Putting" ++ show (length ms) ++ "measurements to DB")
       e <- putMeasuresToDB pipe ms
       case e  of
@@ -56,5 +56,8 @@ mainBody t domain intrv callback = do
            M.close pipe
            P.runCommand ("sleep " ++ show intrv) >>= waitForProcess -- Workaround for veiset (noob)
            callback j
+
+safeMax [] = 0
+safeMax xs = maximum xs
 
 mainLoop domain intrv t = mainBody t domain intrv (mainLoop domain intrv)
