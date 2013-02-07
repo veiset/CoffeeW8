@@ -2,63 +2,31 @@
 <html>
  <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Flot Examples</title>
+    <title>CoffeeW8 CoffeeMonitor</title>
     <link href="layout/styles.css" rel="stylesheet" type="text/css">
     <script language="javascript" type="text/javascript" src="js/jquery.js"></script>
     <script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
  </head>
     <body>
     <h1>Coffee State</h1>
-    <p>Consumption the last 60 seconds.</p>
+    <p id="info"></p>
+
     <div id="placeholder" style="width:900px;height:250px;"></div>
 
-    <script type="text/javascript">
-    $(function () {
-        var data = [];
-        // configuration
-        var refresh_rate = 2000; // refresh rate in milliseconds.
-        var data_size = 60;
-        var sensor_time_step = 1; // seconds
-        // setup plot
-        var options = {
-            series: { shadowSize: 0 }, // drawing is faster without shadows
-            yaxis: { min: 0, max: 4000 },
-            xaxis: { show: false }
-        };
+    <p id="info_date"></p>
 
-        function getAjaxData(n) {
-            var high = 0;
-            if (data.length > 0) high = data[0][0];
-
-            function callback(d) {
-                json = eval(d); // parse JSON array
-                $.each(json, function(i, item) {
-                    if (item.time > high) { // add only if more recent than stored
-                        data.push([item.time, item.weight]);
-                    }
-                });
-                data.sort();
-                data.reverse();
-                if (data.length > data_size) data = data.slice(0,data_size);
-                $.plot($("#placeholder"), [ data ], options);
-            };
-
-            $.ajax({
-              type: "GET",
-              url: 'api' + '/since/' + high,
-              dataType: "json",
-              contentType: "text/plain; charset=utf-8",
-              success: callback,
-            });
-
-            setTimeout(getAjaxData, refresh_rate, unixtime);
-        }
-
-        var unixtime =  Math.round(new Date().getTime() / 1000); 
-        getAjaxData(unixtime-(sensor_time_step*data_size));
-
-    });
-    </script>
+    
+    <p>
+      <input id="refresh_rate_input" type="text" value="" style="text-align: right; width:5em"> 
+      Time between updates in milliseconds (suggested 500-5000).
+    </p>
+    
+    <p>
+      <input id="data_size_input" type="text" value="" style="text-align: right; width:5em"> 
+      Data size in entries (suggested 5-500).
+    </p>
+    
+    <script src="js/coffeeplot.js" type="text/javascript"></script>
 
  </body>
 </html>

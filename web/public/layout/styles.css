@@ -4,3 +4,7 @@ body {
   margin: 50px;
   max-width: 800px;
 }
+p#info_date {
+  font-family: courier, courier new, monospace;
+  font-size: 11px;
+}
